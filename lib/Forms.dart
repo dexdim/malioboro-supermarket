@@ -85,7 +85,7 @@ class FormsState extends State<Forms> {
     });
   }
 
-  Widget textPesan() {
+  Widget header() {
     return Container(
         width: MediaQuery.of(context).size.width / 1.3,
         child: Text(
@@ -95,7 +95,7 @@ class FormsState extends State<Forms> {
         ));
   }
 
-  Widget formPesan(String title, controller) {
+  Widget formField(String title, controller) {
     return Container(
       width: MediaQuery.of(context).size.width / 1.3,
       child: Column(
@@ -145,12 +145,13 @@ class FormsState extends State<Forms> {
         width: MediaQuery.of(context).size.width,
         child: Form(
           key: formKey,
+          autovalidate: true,
           child: Column(children: <Widget>[
             SizedBox(height: 100),
-            textPesan(),
+            header(),
             SizedBox(height: 30),
-            formPesan('Nama', namaController),
-            formPesan('Nomor Handphone', nomorhpController)
+            formField('Nama', namaController),
+            formField('Nomor Handphone', nomorhpController)
           ]),
         ),
       ),

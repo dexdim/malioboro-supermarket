@@ -39,19 +39,21 @@ class HomeState extends State<Home> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.rectangle,
-                        border: Border.all(color: Colors.orange[200])),
+                        border: Border.all(color: Colors.orange[200]),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                            child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          child: Image(
-                            image: NetworkImage(
-                                'http://www.malmalioboro.co.id/${data[index].gambar}'),
-                            fit: BoxFit.fill,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            child: Image(
+                              image: NetworkImage(
+                                  'http://www.malmalioboro.co.id/${data[index].gambar}'),
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        )),
+                        ),
                         Padding(
                           padding: EdgeInsets.all(10),
                           child: Text(
