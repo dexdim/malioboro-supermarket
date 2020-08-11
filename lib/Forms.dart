@@ -111,7 +111,58 @@ class FormsState extends State<Forms> {
                 onSaved: (value) => title = value,
                 style: TextStyle(color: Colors.grey[850], fontSize: 16),
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  labelText: title,
+                  labelStyle: TextStyle(color: Colors.grey[850], fontSize: 16),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Kolom ${title.toLowerCase()} masih kosong!';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ]),
+    );
+  }
+
+  Widget formFieldEmail(String title, controller) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      width: MediaQuery.of(context).size.width / 1.3,
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              child: TextFormField(
+                controller: controller,
+                onSaved: (value) => title = value,
+                style: TextStyle(color: Colors.grey[850], fontSize: 16),
+                decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   labelText: title,
                   labelStyle: TextStyle(color: Colors.grey[850], fontSize: 16),
                   enabledBorder: OutlineInputBorder(
@@ -165,7 +216,7 @@ class FormsState extends State<Forms> {
               formField('Nama lengkap', namaController),
               formField('Alamat', alamatController),
               formField('Nomor handphone', nomorhpController),
-              formField('Email', emailController)
+              formFieldEmail('Email', emailController)
             ]),
           ),
         ),
