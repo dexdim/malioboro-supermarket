@@ -26,7 +26,7 @@ class DetailsState extends State<Details> {
       return RaisedButton(
           elevation: 3,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(10),
             side: BorderSide(
               color: Colors.orange[200],
               width: 1,
@@ -124,7 +124,7 @@ class DetailsState extends State<Details> {
           ScopedModelDescendant<AppModel>(builder: (context, child, model) {
             widget.detail.counter = counter;
             widget.detail.subtotal = counter * widget.detail.harga;
-            return Text('Rp ${widget.detail.subtotal.toString()}',
+            return Text('Rp ${widget.detail.subtotal}',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500));
           }),
         ],

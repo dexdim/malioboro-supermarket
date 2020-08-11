@@ -13,7 +13,7 @@ class Data {
   int id;
   String nama;
   String deskripsi;
-  dynamic harga;
+  int harga;
   String gambar;
   int shopid;
   int counter;
@@ -30,6 +30,7 @@ class AppModel extends Model {
   List<Data> _data = [];
   List<Data> _cart = [];
   String cartMsg = '';
+  String cartEmpty = 'Keranjang belanja anda masih kosong!';
   bool success = false;
   Database _db;
   Directory tempDir;
@@ -154,7 +155,7 @@ class AppModel extends Model {
           d.nama = data[i]['nama'];
           d.deskripsi = data[i]['deskripsi'];
           d.gambar = data[i]['gambar'];
-          d.harga = data[i]['harga'];
+          d.harga = int.parse(data[i]['harga']);
           try {
             var qry =
                 "INSERT INTO item_list(nama, deskripsi, harga, gambar) VALUES('${d.nama}', '${d.deskripsi}', ${d.harga}, '${d.gambar}')";

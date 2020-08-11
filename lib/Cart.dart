@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'ScopeManage.dart';
@@ -14,6 +15,7 @@ class Cart extends StatefulWidget {
 }
 
 class CartState extends State<Cart> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   static var totalHarga;
 
   Widget button(String title) {
@@ -24,7 +26,7 @@ class CartState extends State<Cart> {
           RaisedButton(
             elevation: 3,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(10),
               side: BorderSide(
                 color: Colors.orange[200],
                 width: 1,
@@ -44,8 +46,14 @@ class CartState extends State<Cart> {
               ),
             ),
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Forms()));
+              Timer(Duration(milliseconds: 500), () {
+                if (model.cartListing.length == 0) {
+                  showCartSnak(model.cartEmpty);
+                } else {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Forms()));
+                }
+              });
             },
             splashColor: Colors.transparent,
             highlightColor: Colors.orange[100],
@@ -151,13 +159,25 @@ class CartState extends State<Cart> {
     );
   }
 
+  showCartSnak(String msg) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        msg,
+        style: TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red[500],
+      duration: Duration(seconds: 2),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
-          elevation: 5,
-          title: Text('Daftar Keranjang'),
+          elevation: 1,
+          title: Text('Daftar Keranjang Belanja'),
         ),
         backgroundColor: Colors.white,
         body: Container(

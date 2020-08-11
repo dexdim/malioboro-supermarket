@@ -16,9 +16,12 @@ class Forms extends StatefulWidget {
 class FormsState extends State<Forms> {
   final formKey = GlobalKey<FormState>();
   final namaController = TextEditingController();
+  final alamatController = TextEditingController();
   final nomorhpController = TextEditingController();
+  final emailController = TextEditingController();
   String namapemesan;
   String nomorhp;
+  bool validate = false;
 
   @override
   void dispose() {
@@ -35,7 +38,7 @@ class FormsState extends State<Forms> {
           RaisedButton(
             elevation: 3,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(10),
               side: BorderSide(
                 color: Colors.orange[200],
                 width: 1,
@@ -44,7 +47,7 @@ class FormsState extends State<Forms> {
             color: Colors.white,
             padding: EdgeInsets.symmetric(
               vertical: 10,
-              horizontal: 100,
+              horizontal: 50,
             ),
             child: Text(
               title,
@@ -89,7 +92,7 @@ class FormsState extends State<Forms> {
     return Container(
         width: MediaQuery.of(context).size.width / 1.3,
         child: Text(
-          'Silakan anda bisa mengisi form dibawah ini untuk melengkapi proses pemesanan di Malioboro Mall Supermarket',
+          'Untuk proses selanjutnya silakan anda melengkapi form pemesanan dengan lengkap',
           style: TextStyle(fontSize: 20),
           textAlign: TextAlign.center,
         ));
@@ -97,40 +100,49 @@ class FormsState extends State<Forms> {
 
   Widget formField(String title, controller) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
       width: MediaQuery.of(context).size.width / 1.3,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              height: 50,
               child: TextFormField(
                 controller: controller,
                 onSaved: (value) => title = value,
                 style: TextStyle(color: Colors.grey[850], fontSize: 16),
                 decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  contentPadding: EdgeInsets.all(10),
                   labelText: title,
-                  labelStyle: TextStyle(color: Colors.grey[850]),
+                  labelStyle: TextStyle(color: Colors.grey[850], fontSize: 16),
                   enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                    color: Colors.grey,
-                  )),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
+                  ),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                    color: Colors.deepOrangeAccent,
-                  )),
-                  filled: true,
+                    borderSide: BorderSide(
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Kolom $title masih kosong, harap isi dengan benar!';
+                    return 'Kolom ${title.toLowerCase()} masih kosong!';
                   }
                   return null;
                 },
               ),
             ),
-            SizedBox(height: 10),
           ]),
     );
   }
@@ -141,18 +153,21 @@ class FormsState extends State<Forms> {
         title: Text('Form pemesanan'),
         elevation: 5,
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Form(
-          key: formKey,
-          autovalidate: true,
-          child: Column(children: <Widget>[
-            SizedBox(height: 100),
-            header(),
-            SizedBox(height: 30),
-            formField('Nama', namaController),
-            formField('Nomor Handphone', nomorhpController)
-          ]),
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Form(
+            key: formKey,
+            child: Column(children: <Widget>[
+              SizedBox(height: 50),
+              header(),
+              SizedBox(height: 50),
+              formField('Nama lengkap', namaController),
+              formField('Alamat', alamatController),
+              formField('Nomor handphone', nomorhpController),
+              formField('Email', emailController)
+            ]),
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
