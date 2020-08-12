@@ -161,8 +161,7 @@ class FormsState extends State<Forms> {
                 onSaved: (value) => title = value,
                 style: TextStyle(color: Colors.grey[850], fontSize: 16),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  contentPadding: EdgeInsets.all(10),
                   labelText: title,
                   labelStyle: TextStyle(color: Colors.grey[850], fontSize: 16),
                   enabledBorder: OutlineInputBorder(
