@@ -72,7 +72,11 @@ class HomeState extends State<Home> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Text(
-                                  'Rp ${data[index].harga}',
+                                  NumberFormat.currency(
+                                    locale: 'id',
+                                    name: 'Rp ',
+                                    decimalDigits: 0,
+                                  ).format(data[index].harga),
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600),

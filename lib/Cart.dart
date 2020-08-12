@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'ScopeManage.dart';
 import 'Forms.dart';
@@ -130,7 +131,11 @@ class CartState extends State<Cart> {
                   SizedBox(
                     height: 5.0,
                   ),
-                  Text('Harga subtotal : Rp ${d.subtotal}'),
+                  Text('Harga subtotal : ${NumberFormat.currency(
+                    locale: 'id',
+                    name: 'Rp ',
+                    decimalDigits: 0,
+                  ).format(d.subtotal)}'),
                 ],
               ),
             ))
@@ -152,7 +157,7 @@ class CartState extends State<Cart> {
                       fontSize: 20.0,
                       color: Colors.grey,
                       fontWeight: FontWeight.w400))),
-          Text('Rp $totalHarga',
+          Text(totalHarga,
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500)),
         ],
       ),
@@ -199,8 +204,14 @@ class CartState extends State<Cart> {
             height: 70,
             child: ScopedModelDescendant<AppModel>(
                 builder: (context, child, model) {
-              totalHarga = (model.cartListing
-                  .fold(0, (total, current) => total + current.subtotal));
+              totalHarga = NumberFormat.currency(
+                locale: 'id',
+                name: 'Rp ',
+                decimalDigits: 0,
+              ).format(
+                (model.cartListing
+                    .fold(0, (total, current) => total + current.subtotal)),
+              );
 
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
+import 'package:email_validator/email_validator.dart';
 import 'Cart.dart';
 import 'ScopeManage.dart';
 
@@ -98,103 +99,104 @@ class FormsState extends State<Forms> {
         ));
   }
 
-  Widget formField(String title, controller) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      width: MediaQuery.of(context).size.width / 1.3,
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: TextFormField(
-                controller: controller,
-                onSaved: (value) => title = value,
-                style: TextStyle(color: Colors.grey[850], fontSize: 16),
-                decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  labelText: title,
-                  labelStyle: TextStyle(color: Colors.grey[850], fontSize: 16),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.deepOrangeAccent,
-                    ),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.deepOrangeAccent,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Kolom ${title.toLowerCase()} masih kosong!';
-                  }
-                  return null;
-                },
-              ),
-            ),
-          ]),
+  inputDecoration(String title) {
+    return InputDecoration(
+      contentPadding: EdgeInsets.all(10),
+      labelText: title,
+      labelStyle: TextStyle(color: Colors.grey[850], fontSize: 16),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.grey,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.deepOrangeAccent,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.deepOrangeAccent,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: BorderSide(
+          color: Colors.grey,
+        ),
+      ),
     );
   }
 
-  Widget formFieldEmail(String title, controller) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      width: MediaQuery.of(context).size.width / 1.3,
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: TextFormField(
-                controller: controller,
-                onSaved: (value) => title = value,
-                style: TextStyle(color: Colors.grey[850], fontSize: 16),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10),
-                  labelText: title,
-                  labelStyle: TextStyle(color: Colors.grey[850], fontSize: 16),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.deepOrangeAccent,
-                    ),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.deepOrangeAccent,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                    ),
-                  ),
+  Widget formField(String title, controller) {
+    if (title == 'Email') {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        width: MediaQuery.of(context).size.width / 1.3,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: controller,
+                  onSaved: (value) => title = value,
+                  style: TextStyle(color: Colors.grey[850], fontSize: 16),
+                  decoration: inputDecoration(title),
+                  validator: (value) => !EmailValidator.validate(value, true)
+                      ? 'Email tidak valid / masih kosong!'
+                      : null,
                 ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Kolom ${title.toLowerCase()} masih kosong!';
-                  }
-                  return null;
-                },
               ),
-            ),
-          ]),
-    );
+            ]),
+      );
+    } else if (title == 'Nomor Handphone') {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        width: MediaQuery.of(context).size.width / 1.3,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: controller,
+                  onSaved: (value) => title = value,
+                  style: TextStyle(color: Colors.grey[850], fontSize: 16),
+                  decoration: inputDecoration(title),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Kolom ${title.toLowerCase()} masih kosong!';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ]),
+      );
+    } else {
+      return Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        width: MediaQuery.of(context).size.width / 1.3,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: TextFormField(
+                  controller: controller,
+                  onSaved: (value) => title = value,
+                  style: TextStyle(color: Colors.grey[850], fontSize: 16),
+                  decoration: inputDecoration(title),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Kolom ${title.toLowerCase()} masih kosong!';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ]),
+      );
+    }
   }
 
   Widget build(BuildContext context) {
@@ -212,10 +214,10 @@ class FormsState extends State<Forms> {
               SizedBox(height: 50),
               header(),
               SizedBox(height: 50),
-              formField('Nama lengkap', namaController),
+              formField('Nama Lengkap', namaController),
               formField('Alamat', alamatController),
-              formField('Nomor handphone', nomorhpController),
-              formFieldEmail('Email', emailController)
+              formField('Email', nomorhpController),
+              formField('Nomor Handphone', emailController)
             ]),
           ),
         ),

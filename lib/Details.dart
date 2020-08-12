@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:intl/intl.dart';
 import 'ScopeManage.dart';
 //import 'Counter.dart';
 
@@ -17,6 +18,7 @@ class Details extends StatefulWidget {
 class DetailsState extends State<Details> {
   int counter = 1;
   int subtotal = 0;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   //int active = 0;
@@ -48,7 +50,7 @@ class DetailsState extends State<Details> {
           onPressed: () {
             model.addCart(widget.detail);
             Timer(Duration(milliseconds: 500), () {
-              showCartSnak(model.cartMsg, model.success);
+              showDetailSnack(model.cartMsg, model.success);
             });
           },
           splashColor: Colors.transparent,
@@ -64,8 +66,8 @@ class DetailsState extends State<Details> {
         onTap: () {
           setState(() {
             counter -= 1;
-            if (counter < 0) {
-              counter = 0;
+            if (counter < 1) {
+              counter = 1;
             }
           });
         },
@@ -77,16 +79,16 @@ class DetailsState extends State<Details> {
           ),
           child: Icon(
             Icons.remove,
-            size: 15,
+            size: 20,
           ),
         ),
       ),
-      SizedBox(width: 20),
+      SizedBox(width: 30),
       Text(
         "$counter",
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 25),
       ),
-      SizedBox(width: 20),
+      SizedBox(width: 30),
       GestureDetector(
         onTap: () {
           setState(() {
@@ -101,11 +103,22 @@ class DetailsState extends State<Details> {
           ),
           child: Icon(
             Icons.add,
-            size: 15,
+            size: 20,
           ),
         ),
       ),
     ]);
+  }
+
+  showDetailSnack(String msg, bool flag) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        msg,
+        style: TextStyle(color: Colors.white),
+      ),
+      backgroundColor: (flag) ? Colors.green : Colors.red[500],
+      duration: Duration(seconds: 2),
+    ));
   }
 
   Widget subtotalBar() {
@@ -124,7 +137,12 @@ class DetailsState extends State<Details> {
           ScopedModelDescendant<AppModel>(builder: (context, child, model) {
             widget.detail.counter = counter;
             widget.detail.subtotal = counter * widget.detail.harga;
-            return Text('Rp ${widget.detail.subtotal}',
+            return Text(
+                NumberFormat.currency(
+                  locale: 'id',
+                  name: 'Rp ',
+                  decimalDigits: 0,
+                ).format(widget.detail.subtotal),
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500));
           }),
         ],
@@ -132,19 +150,13 @@ class DetailsState extends State<Details> {
     );
   }
 
-  showCartSnak(String msg, bool flag) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(
-        msg,
-        style: TextStyle(color: Colors.white),
-      ),
-      backgroundColor: (flag) ? Colors.green : Colors.red[500],
-      duration: Duration(seconds: 2),
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
+    String hargaSatuan = NumberFormat.currency(
+      locale: 'id',
+      name: 'Rp ',
+      decimalDigits: 0,
+    ).format(widget.detail.harga);
     // TODO: implement build
     return SafeArea(
       bottom: false,
@@ -153,6 +165,7 @@ class DetailsState extends State<Details> {
           key: _scaffoldKey,
           backgroundColor: Colors.white,
           appBar: AppBar(
+            centerTitle: true,
             title: Text('Detail Item'),
             elevation: 0,
           ),
@@ -201,7 +214,7 @@ class DetailsState extends State<Details> {
                       ),
                       SizedBox(height: 10),
                       Text(
-                        'Harga satuan : Rp ${widget.detail.harga}',
+                        'Harga satuan : $hargaSatuan',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20.0,
