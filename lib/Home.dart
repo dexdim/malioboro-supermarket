@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:search_widget/search_widget.dart';
 import 'Cart.dart';
 import 'ScopeManage.dart';
 import 'Details.dart';
+
+class Item {
+  String nama;
+
+  Item(this.nama);
+}
 
 class Home extends StatefulWidget {
   final AppModel appModel;
