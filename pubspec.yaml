@@ -20,6 +20,7 @@ dependencies:
   flutter_launcher_icons: ^0.7.5
   search_widget: ^1.0.2
   email_validator: ^1.0.5
+  convex_bottom_bar: ^2.4.1
 
 dev_dependencies:
   flutter_test:
