@@ -5,12 +5,6 @@ import 'Cart.dart';
 import 'ScopeManage.dart';
 import 'Details.dart';
 
-class Item {
-  String nama;
-
-  Item(this.nama);
-}
-
 class Home extends StatefulWidget {
   final AppModel appModel;
   static final String route = 'Home-route';
@@ -22,106 +16,55 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController searchQuery = TextEditingController();
+  bool isSearching;
+  String searchText = '';
+  List<Data> data;
+  List<Data> searchList = List();
+  List<Data> buildSearchList() {
+    if (searchText.isEmpty) {
+      return searchList = data;
+    } else {
+      searchList = data
+          .where((element) =>
+              element.nama.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+      print('${searchList.length} item found!');
+      return searchList;
+    }
+  }
+
   Icon searchIcon = Icon(
     Icons.search,
     color: Colors.orangeAccent,
+    size: 30,
   );
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  final TextEditingController searchQuery = TextEditingController();
-  List<Data> data;
-  List<Data> searchList = List();
 
-  bool isSearching;
-  String searchText = '';
   HomeState() {
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
         setState(() {
           isSearching = false;
           searchText = '';
+          buildSearchList();
+        });
+      } else {
+        setState(() {
+          isSearching = true;
+          searchText = searchQuery.text;
+          buildSearchList();
         });
       }
     });
   }
 
-  Widget gridGenerate(List<Data> data, aspectRatio) {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: aspectRatio),
-        itemBuilder: (BuildContext context, int index) {
-          return Padding(
-              padding: EdgeInsets.all(5.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Details(detail: data[index])));
-                },
-                child: Container(
-                    padding: EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      border: Border.all(color: Colors.orange[200]),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            child: Image(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  'http://www.malmalioboro.co.id/${data[index].gambar}'),
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '${data[index].nama}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w700),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5),
-                          child: Column(children: <Widget>[
-                            Divider(
-                              color: Colors.orange[200],
-                              thickness: 1,
-                            ),
-                            Row(
-                              //mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  NumberFormat.currency(
-                                    locale: 'id',
-                                    name: 'Rp ',
-                                    decimalDigits: 0,
-                                  ).format(data[index].harga),
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        ),
-                      ],
-                    )),
-              ));
-        },
-        itemCount: data.length,
-      ),
-    );
-  }
+  Widget appBarTitle = Text(
+    'SUPERMARKET MALIOBORO MALL',
+    style: TextStyle(
+      fontSize: 20,
+    ),
+  );
 
   Widget cartButton() {
     return FloatingActionButton(
@@ -147,7 +90,6 @@ class HomeState extends State<Home> {
             child: ScopedModelDescendant<AppModel>(
               builder: (context, child, model) {
                 return Container(
-                  //padding: EdgeInsets.all(1),
                   decoration: new BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.circular(25),
@@ -175,49 +117,119 @@ class HomeState extends State<Home> {
     );
   }
 
+  Widget appBar(BuildContext context) {
+    return AppBar(
+      elevation: 1,
+      automaticallyImplyLeading: false,
+      centerTitle: true,
+      title: appBarTitle,
+      actions: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(right: 15),
+          child: InkResponse(
+            child: searchIcon,
+            onTap: () {
+              if (this.searchIcon.icon == Icons.search) {
+                this.searchIcon = Icon(
+                  Icons.close,
+                  color: Colors.orangeAccent,
+                  size: 30,
+                );
+                this.appBarTitle = TextField(
+                  controller: searchQuery,
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Cari di sini...',
+                    hintStyle: TextStyle(color: Colors.orangeAccent),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                );
+                handleSearchStart();
+              } else {
+                handleSearchEnd();
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  void handleSearchStart() {
+    setState(() {
+      isSearching = true;
+    });
+  }
+
+  void handleSearchEnd() {
+    setState(() {
+      this.searchIcon = Icon(
+        Icons.search,
+        color: Colors.orangeAccent,
+        size: 30,
+      );
+      this.appBarTitle = Text(
+        'SUPERMARKET MALIOBORO MALL',
+        style: TextStyle(
+          fontSize: 20,
+        ),
+      );
+    });
+  }
+
+  void init() {
+    AppModel model;
+    data = model.itemListing;
+    searchList = data;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isSearching = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight + 50) / 3.5;
     final double itemWidth = size.width / 3;
+    dynamic aspectRatio = itemWidth / itemHeight;
 
     // TODO: implement build
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: Scaffold(
         key: scaffoldKey,
-        appBar: AppBar(
-          elevation: 1,
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title: Text(
-            'SUPERMARKET MALIOBORO MALL',
-            style: TextStyle(
-              fontSize: 20,
+        appBar: appBar(context),
+        body: Container(
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: aspectRatio,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return Item(searchList[index]);
+              },
+              itemCount: searchList.length,
             ),
           ),
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 15),
-              child: InkResponse(
-                onTap: () {},
-                child: Icon(
-                  Icons.search,
-                  size: 30,
-                  color: Colors.orangeAccent,
-                ),
-              ),
-            ),
-          ],
         ),
-        body: ScopedModelDescendant<AppModel>(builder: (context, child, model) {
-          return Container(
-            decoration: BoxDecoration(color: Colors.white),
-            child: gridGenerate(model.itemListing, (itemWidth / itemHeight)),
-          );
-        }),
         floatingActionButton: Container(
           margin: EdgeInsets.only(right: 5, bottom: 5),
           width: 70,
@@ -226,6 +238,80 @@ class HomeState extends State<Home> {
               border: Border.all(color: Colors.black12, width: 3),
               shape: BoxShape.circle),
           child: cartButton(),
+        ),
+      ),
+    );
+  }
+}
+
+class Item extends StatelessWidget {
+  final Data data;
+  Item(this.data);
+
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Details(detail: data),
+            ),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            border: Border.all(color: Colors.orange[200]),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: Image(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                        'http://www.malmalioboro.co.id/${data.gambar}'),
+                  ),
+                ),
+              ),
+              Text(
+                '${data.nama}',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Column(children: <Widget>[
+                  Divider(
+                    color: Colors.orange[200],
+                    thickness: 1,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        NumberFormat.currency(
+                          locale: 'id',
+                          name: 'Rp ',
+                          decimalDigits: 0,
+                        ).format(data.harga),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ]),
+              ),
+            ],
+          ),
         ),
       ),
     );
