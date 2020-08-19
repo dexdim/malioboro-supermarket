@@ -41,6 +41,7 @@ class HomeState extends State<Home> {
     size: 30,
   );
 
+/*
   HomeState() {
     searchQuery.addListener(() {
       if (searchQuery.text.isEmpty) {
@@ -58,6 +59,7 @@ class HomeState extends State<Home> {
       }
     });
   }
+*/
 
   Widget appBarTitle = Text(
     'SUPERMARKET MALIOBORO MALL',
@@ -119,6 +121,7 @@ class HomeState extends State<Home> {
 
   Widget appBar(BuildContext context) {
     return AppBar(
+      toolbarHeight: 70,
       elevation: 1,
       automaticallyImplyLeading: false,
       centerTitle: true,
@@ -135,29 +138,38 @@ class HomeState extends State<Home> {
                   color: Colors.orangeAccent,
                   size: 30,
                 );
-                this.appBarTitle = TextField(
-                  controller: searchQuery,
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Cari di sini...',
-                    hintStyle: TextStyle(color: Colors.orangeAccent),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                      ),
+                this.appBarTitle = Container(
+                  margin: EdgeInsets.only(right: 10),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.75,
+                  child: TextField(
+                    controller: searchQuery,
+                    style: TextStyle(
+                      fontSize: 20,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 5,
+                        horizontal: 10,
+                      ),
+                      hintText: 'Cari di sini...',
+                      hintStyle: TextStyle(color: Colors.orangeAccent),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.deepOrangeAccent,
+                        ),
                       ),
                     ),
                   ),
                 );
-                handleSearchStart();
+                //handleSearchStart();
               } else {
-                handleSearchEnd();
+                //handleSearchEnd();
               }
             },
           ),
@@ -166,6 +178,88 @@ class HomeState extends State<Home> {
     );
   }
 
+  Widget gridGenerate(List<Data> data, aspectRatio) {
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: aspectRatio),
+        itemBuilder: (context, int index) {
+          return Padding(
+            padding: EdgeInsets.all(5.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Details(detail: data[index]),
+                  ),
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  border: Border.all(color: Colors.orange[200]),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        child: Image(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                              'http://www.malmalioboro.co.id/${data[index].gambar}'),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${data[index].nama}',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(children: <Widget>[
+                        Divider(
+                          color: Colors.orange[200],
+                          thickness: 1,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              NumberFormat.currency(
+                                locale: 'id',
+                                name: 'Rp ',
+                                decimalDigits: 0,
+                              ).format(searchList[index].harga),
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ]),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+        itemCount: data.length,
+      ),
+    );
+  }
+
+/*
   void handleSearchStart() {
     setState(() {
       isSearching = true;
@@ -188,11 +282,6 @@ class HomeState extends State<Home> {
     });
   }
 
-  void init() {
-    AppModel model;
-    data = model.itemListing;
-    searchList = data;
-  }
 
   @override
   void initState() {
@@ -200,12 +289,21 @@ class HomeState extends State<Home> {
     isSearching = false;
   }
 
+
+  void init() {
+    AppModel model;
+    data = model.itemListing;
+    searchList = data;
+  }
+
+*/
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height - kToolbarHeight + 50) / 3.5;
     final double itemWidth = size.width / 3;
-    dynamic aspectRatio = itemWidth / itemHeight;
+    final double aspectRatio = itemWidth / itemHeight;
 
     // TODO: implement build
     return WillPopScope(
@@ -213,23 +311,11 @@ class HomeState extends State<Home> {
       child: Scaffold(
         key: scaffoldKey,
         appBar: appBar(context),
-        body: Container(
-          decoration: BoxDecoration(color: Colors.transparent),
-          child: Padding(
-            padding: EdgeInsets.all(5.0),
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: aspectRatio,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return Item(searchList[index]);
-              },
-              itemCount: searchList.length,
-            ),
-          ),
-        ),
+        body: ScopedModelDescendant<AppModel>(builder: (context, child, model) {
+          return Container(
+              decoration: BoxDecoration(color: Colors.white),
+              child: gridGenerate(model.itemListing, aspectRatio));
+        }),
         floatingActionButton: Container(
           margin: EdgeInsets.only(right: 5, bottom: 5),
           width: 70,
@@ -238,80 +324,6 @@ class HomeState extends State<Home> {
               border: Border.all(color: Colors.black12, width: 3),
               shape: BoxShape.circle),
           child: cartButton(),
-        ),
-      ),
-    );
-  }
-}
-
-class Item extends StatelessWidget {
-  final Data data;
-  Item(this.data);
-
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Details(detail: data),
-            ),
-          );
-        },
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            border: Border.all(color: Colors.orange[200]),
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: Image(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                        'http://www.malmalioboro.co.id/${data.gambar}'),
-                  ),
-                ),
-              ),
-              Text(
-                '${data.nama}',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5),
-                child: Column(children: <Widget>[
-                  Divider(
-                    color: Colors.orange[200],
-                    thickness: 1,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        NumberFormat.currency(
-                          locale: 'id',
-                          name: 'Rp ',
-                          decimalDigits: 0,
-                        ).format(data.harga),
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ]),
-              ),
-            ],
-          ),
         ),
       ),
     );

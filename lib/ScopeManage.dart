@@ -46,6 +46,7 @@ class AppModel extends Model {
     http.Response response = await http.post(Uri.encodeFull(url), body: body);
     var parse = json.decode(response.body);
     data = parse;
+    print(parse);
     createDB();
     return 'Success!';
   }
