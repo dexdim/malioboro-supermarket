@@ -16,12 +16,12 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  AppModel model;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController searchQuery = TextEditingController();
   bool isSearching;
   String searchText = '';
-  List<Data> data;
-  List<Data> searchList = List();
+  List<Data> searchList;
   List<Data> buildSearchList() {
     if (searchText.isEmpty) {
       return searchList = data;
@@ -40,26 +40,6 @@ class HomeState extends State<Home> {
     color: Colors.orangeAccent,
     size: 30,
   );
-
-/*
-  HomeState() {
-    searchQuery.addListener(() {
-      if (searchQuery.text.isEmpty) {
-        setState(() {
-          isSearching = false;
-          searchText = '';
-          buildSearchList();
-        });
-      } else {
-        setState(() {
-          isSearching = true;
-          searchText = searchQuery.text;
-          buildSearchList();
-        });
-      }
-    });
-  }
-*/
 
   Widget appBarTitle = Text(
     'SUPERMARKET MALIOBORO MALL',
@@ -167,9 +147,9 @@ class HomeState extends State<Home> {
                     ),
                   ),
                 );
-                //handleSearchStart();
+                handleSearchStart();
               } else {
-                //handleSearchEnd();
+                handleSearchEnd();
               }
             },
           ),
@@ -179,87 +159,9 @@ class HomeState extends State<Home> {
   }
 
   Widget gridGenerate(List<Data> data, aspectRatio) {
-    return Padding(
-      padding: EdgeInsets.all(5.0),
-      child: GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: aspectRatio),
-        itemBuilder: (context, int index) {
-          return Padding(
-            padding: EdgeInsets.all(5.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Details(detail: data[index]),
-                  ),
-                );
-              },
-              child: Container(
-                padding: EdgeInsets.all(5.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.rectangle,
-                  border: Border.all(color: Colors.orange[200]),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        child: Image(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              'http://www.malmalioboro.co.id/${data[index].gambar}'),
-                        ),
-                      ),
-                    ),
-                    Text(
-                      '${data[index].nama}',
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(children: <Widget>[
-                        Divider(
-                          color: Colors.orange[200],
-                          thickness: 1,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              NumberFormat.currency(
-                                locale: 'id',
-                                name: 'Rp ',
-                                decimalDigits: 0,
-                              ).format(searchList[index].harga),
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      ]),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-        itemCount: data.length,
-      ),
-    );
+    return null;
   }
 
-/*
   void handleSearchStart() {
     setState(() {
       isSearching = true;
@@ -282,21 +184,11 @@ class HomeState extends State<Home> {
     });
   }
 
-
   @override
   void initState() {
     super.initState();
     isSearching = false;
   }
-
-
-  void init() {
-    AppModel model;
-    data = model.itemListing;
-    searchList = data;
-  }
-
-*/
 
   @override
   Widget build(BuildContext context) {
@@ -312,9 +204,90 @@ class HomeState extends State<Home> {
         key: scaffoldKey,
         appBar: appBar(context),
         body: ScopedModelDescendant<AppModel>(builder: (context, child, model) {
+          searchList = model.itemListing;
           return Container(
-              decoration: BoxDecoration(color: Colors.white),
-              child: gridGenerate(model.itemListing, aspectRatio));
+              decoration: BoxDecoration(color: Colors.transparent),
+              child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, childAspectRatio: aspectRatio),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  Details(detail: searchList[index]),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.rectangle,
+                            border: Border.all(color: Colors.orange[200]),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                child: ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  child: Image(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(
+                                        'http://www.malmalioboro.co.id/${searchList[index].gambar}'),
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '${searchList[index].nama}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w700),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: Column(children: <Widget>[
+                                  Divider(
+                                    color: Colors.orange[200],
+                                    thickness: 1,
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        NumberFormat.currency(
+                                          locale: 'id',
+                                          name: 'Rp ',
+                                          decimalDigits: 0,
+                                        ).format(searchList[index].harga),
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                ]),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  itemCount: searchList.length,
+                ),
+              ));
         }),
         floatingActionButton: Container(
           margin: EdgeInsets.only(right: 5, bottom: 5),
