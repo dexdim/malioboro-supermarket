@@ -16,12 +16,150 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  AppModel model;
+  HomeState() {
+    searchQuery.addListener(() {
+      if (searchQuery.text.isEmpty) {
+        setState(() {
+          isSearching = false;
+          searchText = '';
+          buildSearchList();
+        });
+      } else {
+        setState(() {
+          isSearching = true;
+          searchText = searchQuery.text;
+          buildSearchList();
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isSearching = false;
+    data = ScopedModel.of<AppModel>(context).itemListing;
+    searchList = data;
+  }
+
+  // TODO: Implement Build
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    final double itemHeight = (size.height - kToolbarHeight + 50) / 3.5;
+    final double itemWidth = size.width / 3;
+    final double aspectRatio = itemWidth / itemHeight;
+
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        key: scaffoldKey,
+        appBar: appBar(context),
+        body: Container(
+          decoration: BoxDecoration(color: Colors.transparent),
+          child: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: aspectRatio),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              Details(detail: searchList[index]),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.rectangle,
+                        border: Border.all(color: Colors.orange[200]),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              child: Image(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    'http://www.malmalioboro.co.id/${searchList[index].gambar}'),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            '${searchList[index].nama}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: Column(children: <Widget>[
+                              Divider(
+                                color: Colors.orange[200],
+                                thickness: 1,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    NumberFormat.currency(
+                                      locale: 'id',
+                                      name: 'Rp ',
+                                      decimalDigits: 0,
+                                    ).format(searchList[index].harga),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+              itemCount: searchList.length,
+            ),
+          ),
+        ),
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(right: 5, bottom: 5),
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black12, width: 3),
+              shape: BoxShape.circle),
+          child: cartButton(),
+        ),
+      ),
+    );
+  }
+
+  //=====================================================================================================//
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController searchQuery = TextEditingController();
   bool isSearching;
   String searchText = '';
-  List<Data> searchList;
+  List<Data> data;
+  List<Data> searchList = List();
   List<Data> buildSearchList() {
     if (searchText.isEmpty) {
       return searchList = data;
@@ -101,7 +239,7 @@ class HomeState extends State<Home> {
 
   Widget appBar(BuildContext context) {
     return AppBar(
-      toolbarHeight: 70,
+      toolbarHeight: 60,
       elevation: 1,
       automaticallyImplyLeading: false,
       centerTitle: true,
@@ -116,24 +254,22 @@ class HomeState extends State<Home> {
                 this.searchIcon = Icon(
                   Icons.close,
                   color: Colors.orangeAccent,
-                  size: 30,
+                  size: 25,
                 );
                 this.appBarTitle = Container(
-                  margin: EdgeInsets.only(right: 10),
+                  margin: EdgeInsets.only(right: 5),
+                  padding: EdgeInsets.symmetric(vertical: 5),
                   height: 50,
-                  width: MediaQuery.of(context).size.width * 0.75,
+                  width: MediaQuery.of(context).size.width * 0.85,
                   child: TextField(
                     controller: searchQuery,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 10,
-                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 1),
                       hintText: 'Cari di sini...',
-                      hintStyle: TextStyle(color: Colors.orangeAccent),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Colors.grey,
@@ -141,7 +277,7 @@ class HomeState extends State<Home> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Colors.deepOrangeAccent,
+                          color: Colors.orangeAccent,
                         ),
                       ),
                     ),
@@ -156,10 +292,6 @@ class HomeState extends State<Home> {
         ),
       ],
     );
-  }
-
-  Widget gridGenerate(List<Data> data, aspectRatio) {
-    return null;
   }
 
   void handleSearchStart() {
@@ -182,123 +314,5 @@ class HomeState extends State<Home> {
         ),
       );
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    isSearching = false;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height - kToolbarHeight + 50) / 3.5;
-    final double itemWidth = size.width / 3;
-    final double aspectRatio = itemWidth / itemHeight;
-
-    // TODO: implement build
-    return WillPopScope(
-      onWillPop: () => Future.value(false),
-      child: Scaffold(
-        key: scaffoldKey,
-        appBar: appBar(context),
-        body: ScopedModelDescendant<AppModel>(builder: (context, child, model) {
-          searchList = model.itemListing;
-          return Container(
-              decoration: BoxDecoration(color: Colors.transparent),
-              child: Padding(
-                padding: EdgeInsets.all(5.0),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, childAspectRatio: aspectRatio),
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Details(detail: searchList[index]),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(5.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.rectangle,
-                            border: Border.all(color: Colors.orange[200]),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Container(
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  child: Image(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(
-                                        'http://www.malmalioboro.co.id/${searchList[index].gambar}'),
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                '${searchList[index].nama}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w700),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Column(children: <Widget>[
-                                  Divider(
-                                    color: Colors.orange[200],
-                                    thickness: 1,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text(
-                                        NumberFormat.currency(
-                                          locale: 'id',
-                                          name: 'Rp ',
-                                          decimalDigits: 0,
-                                        ).format(searchList[index].harga),
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ],
-                                  ),
-                                ]),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  itemCount: searchList.length,
-                ),
-              ));
-        }),
-        floatingActionButton: Container(
-          margin: EdgeInsets.only(right: 5, bottom: 5),
-          width: 70,
-          height: 70,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12, width: 3),
-              shape: BoxShape.circle),
-          child: cartButton(),
-        ),
-      ),
-    );
   }
 }

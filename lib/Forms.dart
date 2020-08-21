@@ -111,17 +111,17 @@ class FormsState extends State<Forms> {
       ),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Colors.deepOrangeAccent,
+          color: Colors.orangeAccent,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Colors.deepOrangeAccent,
+          color: Colors.redAccent,
         ),
       ),
       errorBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Colors.grey,
+          color: Colors.redAccent,
         ),
       ),
     );
