@@ -152,8 +152,6 @@ class HomeState extends State<Home> {
     );
   }
 
-  //=====================================================================================================//
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController searchQuery = TextEditingController();
   bool isSearching;
