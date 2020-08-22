@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'Cart.dart';
 import 'ScopeManage.dart';
@@ -51,7 +52,7 @@ class HomeState extends State<Home> {
     final double aspectRatio = itemWidth / itemHeight;
 
     return WillPopScope(
-      onWillPop: () => Future.value(false),
+      onWillPop: onWillPop,
       child: Scaffold(
         key: scaffoldKey,
         appBar: appBar(context),
@@ -122,8 +123,8 @@ class HomeState extends State<Home> {
                                       decimalDigits: 0,
                                     ).format(searchList[index].harga),
                                     style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -154,6 +155,7 @@ class HomeState extends State<Home> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController searchQuery = TextEditingController();
+  DateTime currentBackPressTime;
   bool isSearching;
   String searchText = '';
   List<Data> data;
@@ -251,7 +253,7 @@ class HomeState extends State<Home> {
               if (this.searchIcon.icon == Icons.search) {
                 this.searchIcon = Icon(
                   Icons.close,
-                  color: Colors.orangeAccent,
+                  color: Colors.redAccent,
                   size: 25,
                 );
                 this.appBarTitle = Container(
@@ -270,7 +272,7 @@ class HomeState extends State<Home> {
                       hintText: 'Cari di sini...',
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
-                          color: Colors.grey,
+                          color: Colors.orangeAccent,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -312,5 +314,16 @@ class HomeState extends State<Home> {
         ),
       );
     });
+  }
+
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(msg: 'Tekan tombol kembali 2 kali untuk keluar.');
+      return Future.value(false);
+    }
+    return Future.value(true);
   }
 }
