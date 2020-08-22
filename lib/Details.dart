@@ -111,14 +111,16 @@ class DetailsState extends State<Details> {
   }
 
   showDetailSnack(String msg, bool flag) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(
-        msg,
-        style: TextStyle(color: Colors.white),
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: (flag) ? Colors.green : Colors.red[500],
+        duration: Duration(seconds: 2),
       ),
-      backgroundColor: (flag) ? Colors.green : Colors.red[500],
-      duration: Duration(seconds: 2),
-    ));
+    );
   }
 
   Widget subtotalBar() {
@@ -138,12 +140,13 @@ class DetailsState extends State<Details> {
             widget.detail.counter = counter;
             widget.detail.subtotal = counter * widget.detail.harga;
             return Text(
-                NumberFormat.currency(
-                  locale: 'id',
-                  name: 'Rp ',
-                  decimalDigits: 0,
-                ).format(widget.detail.subtotal),
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500));
+              NumberFormat.currency(
+                locale: 'id',
+                name: 'Rp ',
+                decimalDigits: 0,
+              ).format(widget.detail.subtotal),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            );
           }),
         ],
       ),
@@ -162,88 +165,91 @@ class DetailsState extends State<Details> {
       bottom: false,
       top: false,
       child: Scaffold(
-          key: _scaffoldKey,
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text('Detail Item'),
-            elevation: 0,
+        key: _scaffoldKey,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Detail Item'),
+          elevation: 0,
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Colors.grey[300], width: 1.0),
+            ),
           ),
-          body: Container(
-            decoration: BoxDecoration(
-                border: Border(
-                    top: BorderSide(color: Colors.grey[300], width: 1.0))),
-            child: ListView(
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    Container(
-                      height: 425,
-                      padding: EdgeInsets.only(top: 25.0),
-                      color: Colors.white,
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            height: 300.0,
-                            child: Image(
-                              image: NetworkImage(
-                                  'http://www.malmalioboro.co.id/${widget.detail.gambar}'),
-                              fit: BoxFit.contain,
-                            ),
+          child: ListView(
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Container(
+                    height: 425,
+                    padding: EdgeInsets.only(top: 25.0),
+                    color: Colors.white,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 300.0,
+                          child: Image(
+                            image: NetworkImage(
+                                'http://www.malmalioboro.co.id/${widget.detail.gambar}'),
+                            fit: BoxFit.contain,
                           ),
-                          counterBar()
-                        ],
-                      ),
+                        ),
+                        counterBar()
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Divider(
+                color: Colors.grey[300],
+                height: 1.0,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      widget.detail.nama,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 20.0),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Harga satuan : $hargaSatuan',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20.0,
+                          color: Colors.orangeAccent),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Kode barcode : ${widget.detail.deskripsi}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                     ),
                   ],
                 ),
-                Divider(
-                  color: Colors.grey[300],
-                  height: 1.0,
-                ),
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 50.0, vertical: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        widget.detail.nama,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 20.0),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Harga satuan : $hargaSatuan',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20.0,
-                            color: Colors.orangeAccent),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Kode barcode : ${widget.detail.deskripsi}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 16),
-                      ),
-                    ],
-                  ),
-                )
+              )
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          child: Container(
+            //margin: EdgeInsets.only(top: 10),
+            height: 70.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                subtotalBar(),
+                button('BELI'),
               ],
             ),
           ),
-          bottomNavigationBar: BottomAppBar(
-            child: Container(
-                //margin: EdgeInsets.only(top: 10),
-                height: 70.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    subtotalBar(),
-                    button('BELI'),
-                  ],
-                )),
-          )),
+        ),
+      ),
     );
   }
 }

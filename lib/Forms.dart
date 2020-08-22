@@ -91,12 +91,13 @@ class FormsState extends State<Forms> {
 
   Widget header() {
     return Container(
-        width: MediaQuery.of(context).size.width / 1.3,
-        child: Text(
-          'Untuk proses selanjutnya silakan anda melengkapi form pemesanan dengan lengkap',
-          style: TextStyle(fontSize: 20),
-          textAlign: TextAlign.center,
-        ));
+      width: MediaQuery.of(context).size.width / 1.3,
+      child: Text(
+        'Untuk proses selanjutnya silakan anda melengkapi form pemesanan dengan lengkap',
+        style: TextStyle(fontSize: 20),
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 
   inputDecoration(String title) {
@@ -217,13 +218,16 @@ class FormsState extends State<Forms> {
               formField('Nama Lengkap', namaController),
               formField('Alamat', alamatController),
               formField('Email', nomorhpController),
-              formField('Nomor Handphone', emailController)
+              formField('Nomor Handphone', emailController),
             ]),
           ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: Container(height: 70, child: button('ORDER VIA WHATSAPP')),
+        child: Container(
+          height: 70,
+          child: button('ORDER VIA WHATSAPP'),
+        ),
       ),
     );
   }

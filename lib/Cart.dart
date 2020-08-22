@@ -51,8 +51,12 @@ class CartState extends State<Cart> {
                 if (model.cartListing.length == 0) {
                   showCartSnak(model.cartEmpty);
                 } else {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Forms()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Forms(),
+                    ),
+                  );
                 }
               });
             },
@@ -151,77 +155,86 @@ class CartState extends State<Cart> {
       child: Row(
         children: <Widget>[
           Container(
-              width: 110,
-              child: Text('Harga total:',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w400))),
-          Text(totalHarga,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500)),
+            width: 110,
+            child: Text(
+              'Harga total:',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w400),
+            ),
+          ),
+          Text(
+            totalHarga,
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w500),
+          ),
         ],
       ),
     );
   }
 
   showCartSnak(String msg) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(
-        msg,
-        style: TextStyle(color: Colors.white),
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(
+          msg,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red[500],
+        duration: Duration(seconds: 2),
       ),
-      backgroundColor: Colors.red[500],
-      duration: Duration(seconds: 2),
-    ));
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          elevation: 1,
-          title: Text('Daftar Keranjang Belanja'),
-        ),
-        backgroundColor: Colors.white,
-        body: Container(
-          decoration: BoxDecoration(
-              border:
-                  Border(top: BorderSide(color: Colors.grey[300], width: 1.0))),
-          child: ScopedModelDescendant<AppModel>(
-            builder: (context, child, model) {
-              return ListView(
-                shrinkWrap: true,
-                children:
-                    model.cartListing.map((d) => generateCart(d)).toList(),
-              );
-            },
+      key: _scaffoldKey,
+      appBar: AppBar(
+        elevation: 1,
+        title: Text('Daftar Keranjang Belanja'),
+      ),
+      backgroundColor: Colors.white,
+      body: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Colors.grey[300], width: 1.0),
           ),
         ),
-        bottomNavigationBar: BottomAppBar(
-          child: Container(
-            height: 70,
-            child: ScopedModelDescendant<AppModel>(
-                builder: (context, child, model) {
-              totalHarga = NumberFormat.currency(
-                locale: 'id',
-                name: 'Rp ',
-                decimalDigits: 0,
-              ).format(
-                (model.cartListing
-                    .fold(0, (total, current) => total + current.subtotal)),
-              );
+        child: ScopedModelDescendant<AppModel>(
+          builder: (context, child, model) {
+            return ListView(
+              shrinkWrap: true,
+              children: model.cartListing.map((d) => generateCart(d)).toList(),
+            );
+          },
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: 70,
+          child:
+              ScopedModelDescendant<AppModel>(builder: (context, child, model) {
+            totalHarga = NumberFormat.currency(
+              locale: 'id',
+              name: 'Rp ',
+              decimalDigits: 0,
+            ).format(
+              (model.cartListing
+                  .fold(0, (total, current) => total + current.subtotal)),
+            );
 
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  totalBar(),
-                  button('NEXT'),
-                ],
-              );
-            }),
-          ),
-        ));
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                totalBar(),
+                button('NEXT'),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
   }
 }
