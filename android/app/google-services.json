@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:821991408234:android:825cd3a0b3b25feef74013",
+        "mobilesdk_app_id": "1:821991408234:android:48026da7005003e5f74013",
         "android_client_info": {
           "package_name": "com.malioboromall.supermarket"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "821991408234-s728qqprahruea9fumeun1k5mfeihdat.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.malioboromall.supermarket",
+            "certificate_hash": "717da2572b4565e33f2b9fe7abd6ef6404c30201"
+          }
+        },
         {
           "client_id": "821991408234-81rjjai1kp972vbm8ltv6a7pknos1a5q.apps.googleusercontent.com",
           "client_type": 3
