@@ -11,6 +11,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(Main());
 }
+
 class Main extends StatelessWidget {
   static final AppModel appModel = AppModel();
 
