@@ -9,9 +9,7 @@ class Forms extends StatefulWidget {
   static final String route = 'Form-route';
 
   @override
-  State<StatefulWidget> createState() {
-    return FormsState();
-  }
+  FormsState createState() => FormsState();
 }
 
 class FormsState extends State<Forms> {

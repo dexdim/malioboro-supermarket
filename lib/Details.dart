@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:intl/intl.dart';
 import 'model/ScopeManage.dart';
-//import 'Counter.dart';
 
 class Details extends StatefulWidget {
   static final String route = 'Details-route';

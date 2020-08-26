@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import '..'
+import 'package:mm_supermarket/model/ScopeManage.dart';
+import '../model/ScopeManage.dart';
 
+class Signup extends StatefulWidget {
+  @override
+  SignupState createState() => SignupState();
+}
 
-class Signup extends StatefulWidget{
+class SignupState extends State<Signup> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
-  final My
-
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
 }
