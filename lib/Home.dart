@@ -3,14 +3,15 @@ import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'Cart.dart';
-import 'ScopeManage.dart';
+import 'model/ScopeManage.dart';
 import 'Details.dart';
 
 class Home extends StatefulWidget {
   final AppModel appModel;
+  final String uid;
   static final String route = 'Home-route';
 
-  Home({this.appModel});
+  Home({this.appModel, this.uid});
 
   @override
   HomeState createState() => HomeState();

@@ -1,25 +1,29 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'auth/Login.dart';
 import 'Home.dart';
 import 'Details.dart';
 import 'Cart.dart';
 import 'Forms.dart';
-import 'ScopeManage.dart';
+import 'model/ScopeManage.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(Main());
+  runApp(
+    Main(),
+  );
 }
 
 class Main extends StatelessWidget {
   static final AppModel appModel = AppModel();
 
   final routes = <String, WidgetBuilder>{
+    Login.route: (BuildContext context) => Login(),
     Home.route: (BuildContext context) => Home(),
     Details.route: (BuildContext context) => Details(),
     Cart.route: (BuildContext context) => Cart(),
-    Forms.route: (BuildContext context) => Forms()
+    Forms.route: (BuildContext context) => Forms(),
   };
 
   @override
@@ -55,11 +59,13 @@ class SplashScreenState extends State<SplashScreen> {
 
   void navigationPage() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Home(
-                  appModel: Main.appModel,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => Home(
+          appModel: Main.appModel,
+        ),
+      ),
+    );
   }
 
   @override

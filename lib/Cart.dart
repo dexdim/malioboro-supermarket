@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'ScopeManage.dart';
+import 'model/ScopeManage.dart';
 import 'Forms.dart';
 
 class Cart extends StatefulWidget {

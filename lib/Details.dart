@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:intl/intl.dart';
-import 'ScopeManage.dart';
+import 'model/ScopeManage.dart';
 //import 'Counter.dart';
 
 class Details extends StatefulWidget {
