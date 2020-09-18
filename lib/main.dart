@@ -34,8 +34,8 @@ class Main extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Malioboro Mall Supermarket',
-        home: Login(),
-        //home: SplashScreen(title: 'Malioboro Mall Supermarket'),
+        //home: Login(),
+        home: SplashScreen(title: 'Malioboro Mall Supermarket'),
         routes: routes,
         theme: ThemeData(primaryColor: Colors.white, fontFamily: 'OpenSans'),
       ),
