@@ -43,7 +43,10 @@ class AppModel extends Model {
 
   Future<String> fetchData() async {
     Map body = {'idtenan': '136'};
-    http.Response response = await http.post(Uri.encodeFull(url), body: body);
+    http.Response response = await http.post(
+      Uri.encodeFull(url),
+      body: body,
+    );
     var parse = json.decode(response.body);
     data = parse;
     createDB();
@@ -207,7 +210,7 @@ class AppModel extends Model {
         d.shopid = dd['shopid'];
         _cart.add(d);
       }).toList();
-      notifyListeners();
+      //notifyListeners();
     } catch (e) {
       print('ERRR @##@');
       print(e);
