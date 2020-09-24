@@ -26,7 +26,6 @@ List data;
 
 class AppModel extends Model {
   CartState cartState;
-  List<Item> _items = [];
   List<Data> _data = [];
   List<Data> _cart = [];
   String cartMsg = '';
@@ -281,10 +280,4 @@ class AppModel extends Model {
   }
 
   printCart() {}
-}
-
-class Item {
-  final String nama;
-
-  Item(this.nama);
 }
