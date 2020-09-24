@@ -41,6 +41,7 @@ class AppModel extends Model {
 
   get finalprint => printCart();
 
+  //Ambil data JSON dari API
   Future<String> fetchData() async {
     Map body = {'idtenan': '136'};
     http.Response response = await http.post(
@@ -57,24 +58,15 @@ class AppModel extends Model {
     fetchData();
   }
 
-  deleteDB() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'cart.db');
-
-    await deleteDatabase(path);
-    if (storage.getItem('isFirst') != null) {
-      await storage.deleteItem('isFirst');
-    }
-  }
-
+  //Create database cart.db
   createDB() async {
     try {
       Directory documentsDirectory = await getApplicationDocumentsDirectory();
       String path = join(documentsDirectory.path, 'cart.db');
 
       print(path);
-//      await storage.deleteItem('isFirst');
-//      await this.deleteDB();
+      //await storage.deleteItem('isFirst');
+      //await this.deleteDB();
 
       var database =
           await openDatabase(path, version: 1, onOpen: (Database db) {
@@ -91,6 +83,18 @@ class AppModel extends Model {
     }
   }
 
+  //Delete database cart.db
+  deleteDB() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, 'cart.db');
+
+    await deleteDatabase(path);
+    if (storage.getItem('isFirst') != null) {
+      await storage.deleteItem('isFirst');
+    }
+  }
+
+  //Buat tabel item_list & cart_list jika belum ada tabel
   createTable() async {
     try {
       var qry = 'CREATE TABLE IF NOT EXISTS item_list ( '
@@ -128,26 +132,7 @@ class AppModel extends Model {
     }
   }
 
-  fetchLocalData() async {
-    try {
-      // Get the records
-      List<Map> list = await this._db.rawQuery('SELECT * FROM item_list');
-      list.map((dd) {
-        Data d = new Data();
-        d.id = dd['id'];
-        d.nama = dd['nama'];
-        d.deskripsi = dd['deskripsi'];
-        d.gambar = dd['gambar'];
-        d.harga = dd['harga'];
-        _data.add(d);
-      }).toList();
-      notifyListeners();
-    } catch (e) {
-      print('ERRR %%%');
-      print(e);
-    }
-  }
-
+  //Isi data item dari API ke dalam tabel item_list & list array _data
   insertInLocal() async {
     try {
       await this._db.transaction((tx) async {
@@ -178,66 +163,27 @@ class AppModel extends Model {
     }
   }
 
-  insertInCart(Data d) async {
-    await this._db.transaction((tx) async {
-      try {
-        var qry =
-            "INSERT INTO cart_list(shopid, nama, deskripsi, harga, gambar, counter, subtotal) VALUES (${d.id},'${d.nama}', '${d.deskripsi}', ${d.harga},'${d.gambar}', ${d.counter}, ${d.subtotal})";
-        var _res = await tx.execute(qry);
-        this.fetchCartList();
-      } catch (e) {
-        print('ERRR @@ @@');
-        print(e);
-      }
-    });
-  }
-
-  fetchCartList() async {
+  //Ambil record item dari tabel item_list
+  fetchLocalData() async {
     try {
-      // Get the records
-      _cart = [];
-      List<Map> list = await this._db.rawQuery('SELECT * FROM cart_list');
-      print('Cart len ${list.length.toString()}');
+      List<Map> list = await this._db.rawQuery('SELECT * FROM item_list');
       list.map((dd) {
         Data d = new Data();
         d.id = dd['id'];
         d.nama = dd['nama'];
         d.deskripsi = dd['deskripsi'];
-        d.harga = dd['harga'];
         d.gambar = dd['gambar'];
-        d.counter = dd['counter'];
-        d.subtotal = dd['subtotal'];
-        d.shopid = dd['shopid'];
-        _cart.add(d);
+        d.harga = dd['harga'];
+        _data.add(d);
       }).toList();
-      //notifyListeners();
+      notifyListeners();
     } catch (e) {
-      print('ERRR @##@');
+      print('ERRR %%%');
       print(e);
     }
   }
 
-  // Item List
-  List<Data> get itemListing => _data;
-
-  // Item Add
-  void addItem(Data dd) {
-    Data d = new Data();
-    d.id = _data.length + 1;
-    d.nama = 'New';
-    d.deskripsi = 'deskripsi';
-    d.gambar =
-        'https://rukminim.flixcart.com/image/832/832/jao8uq80/shoe/3/r/q/sm323-9-sparx-white-original-imaezvxwmp6qz6tg.jpeg?q=70';
-    d.harga = 1500;
-    d.counter = 1;
-    _data.add(d);
-    notifyListeners();
-  }
-
-  // Cart Listing
-  List<Data> get cartListing => _cart;
-
-  // Add Cart
+  //Isi tambah list array _cart dari list array _data
   void addCart(Data dd) {
     print(dd);
     print(_cart);
@@ -253,6 +199,66 @@ class AppModel extends Model {
     }
   }
 
+  //Isi tabel cart_list dari list array _data
+  insertInCart(Data d) async {
+    await this._db.transaction((tx) async {
+      try {
+        var qry =
+            "INSERT INTO cart_list(shopid, nama, deskripsi, harga, gambar, counter, subtotal) VALUES (${d.id},'${d.nama}', '${d.deskripsi}', ${d.harga},'${d.gambar}', ${d.counter}, ${d.subtotal})";
+        var _res = await tx.execute(qry);
+        this.fetchCartList();
+      } catch (e) {
+        print('ERRR @@ @@');
+        print(e);
+      }
+    });
+  }
+
+  //Ambil record item dari tabel cart_list
+  fetchCartList() async {
+    try {
+      _cart = [];
+      List<Map> list = await this._db.rawQuery('SELECT * FROM cart_list');
+      print('Cart len ${list.length.toString()}');
+      list.map((dd) {
+        Data d = new Data();
+        d.id = dd['id'];
+        d.nama = dd['nama'];
+        d.deskripsi = dd['deskripsi'];
+        d.harga = dd['harga'];
+        d.gambar = dd['gambar'];
+        d.counter = dd['counter'];
+        d.subtotal = dd['subtotal'];
+        d.shopid = dd['shopid'];
+        _cart.add(d);
+      }).toList();
+      notifyListeners();
+    } catch (e) {
+      print('ERRR @##@');
+      print(e);
+    }
+  }
+
+  //Item listing to Home()
+  List<Data> get itemListing => _data;
+
+  //Tambah item (next implementation)
+  void addItem(Data dd) {
+    Data d = new Data();
+    d.id = _data.length + 1;
+    d.nama = 'nama';
+    d.deskripsi = 'deskripsi';
+    d.gambar = 'http://malmalioboro.co.id';
+    d.harga = 1500;
+    d.counter = 1;
+    _data.add(d);
+    notifyListeners();
+  }
+
+  //Cart listing to Cart()
+  List<Data> get cartListing => _cart;
+
+  //Delete record dari tabel cart_list jika ada item yang dihapus
   removeCartDB(Data d) async {
     try {
       var qry = 'DELETE FROM cart_list where id = ${d.id}';
