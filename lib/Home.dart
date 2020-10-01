@@ -8,10 +8,9 @@ import 'Details.dart';
 
 class Home extends StatefulWidget {
   final AppModel appModel;
-  final String uid;
   static final String route = 'Home-route';
 
-  Home({this.appModel, this.uid});
+  Home({this.appModel});
 
   @override
   HomeState createState() => HomeState();
@@ -23,7 +22,7 @@ class HomeState extends State<Home> {
       if (searchQuery.text.isEmpty) {
         setState(() {
           isSearching = false;
-          searchText = '';
+          searchText = null;
           buildSearchList();
         });
       } else {
@@ -91,46 +90,9 @@ class HomeState extends State<Home> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Container(
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              child: Image(
-                                fit: BoxFit.cover,
-                                image: NetworkImage(
-                                    'http://www.malmalioboro.co.id/${searchList[index].gambar}'),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            '${searchList[index].nama}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w700),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5),
-                            child: Column(children: <Widget>[
-                              Divider(
-                                color: Colors.orange[200],
-                                thickness: 1,
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    NumberFormat.currency(
-                                      locale: 'id',
-                                      name: 'Rp ',
-                                      decimalDigits: 0,
-                                    ).format(searchList[index].harga),
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ]),
-                          ),
+                          itemImage(index),
+                          itemName(index),
+                          itemPrice(index),
                         ],
                       ),
                     ),
@@ -166,12 +128,65 @@ class HomeState extends State<Home> {
       return searchList = data;
     } else {
       searchList = data
-          .where((element) =>
-              element.nama.toLowerCase().contains(searchText.toLowerCase()))
+          .where(
+            (element) => element.nama.toLowerCase().contains(
+                  searchText.toLowerCase(),
+                ),
+          )
           .toList();
       print('${searchList.length} item found!');
       return searchList;
     }
+  }
+
+  Widget itemImage(index) {
+    return Container(
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+        child: Image.network(
+          'http://www.malmalioboro.co.id/${searchList[index].gambar}',
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Widget itemName(index) {
+    return Text(
+      '${searchList[index].nama}',
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+    );
+  }
+
+  Widget itemPrice(index) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5),
+      child: Column(
+        children: <Widget>[
+          Divider(
+            color: Colors.orange[200],
+            thickness: 1,
+          ),
+          Row(
+            children: <Widget>[
+              Text(
+                NumberFormat.currency(
+                  locale: 'id',
+                  name: 'Rp ',
+                  decimalDigits: 0,
+                ).format(searchList[index].harga),
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Icon searchIcon = Icon(
@@ -194,7 +209,11 @@ class HomeState extends State<Home> {
       foregroundColor: Colors.orangeAccent,
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Cart()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => Cart(),
+          ),
+        );
       },
       child: Stack(
         children: <Widget>[

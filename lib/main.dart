@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'auth/Login.dart';
 import 'Home.dart';
 import 'Details.dart';
 import 'Cart.dart';
@@ -19,7 +18,6 @@ class Main extends StatelessWidget {
   static final AppModel appModel = AppModel();
 
   final routes = <String, WidgetBuilder>{
-    Login.route: (BuildContext context) => Login(),
     Home.route: (BuildContext context) => Home(),
     Details.route: (BuildContext context) => Details(),
     Cart.route: (BuildContext context) => Cart(),
