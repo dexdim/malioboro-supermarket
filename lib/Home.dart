@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'Cart.dart';
 import 'model/ScopeManage.dart';
@@ -80,7 +81,6 @@ class HomeState extends State<Home> {
                     child: Container(
                       padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        color: Colors.white,
                         shape: BoxShape.rectangle,
                         border: Border.all(color: Colors.orange[200]),
                         borderRadius: BorderRadius.all(
@@ -145,8 +145,8 @@ class HomeState extends State<Home> {
         borderRadius: BorderRadius.all(
           Radius.circular(10),
         ),
-        child: Image.network(
-          'http://www.malmalioboro.co.id/${searchList[index].gambar}',
+        child: CachedNetworkImage(
+          imageUrl: 'http://www.malmalioboro.co.id/${searchList[index].gambar}',
           fit: BoxFit.cover,
         ),
       ),

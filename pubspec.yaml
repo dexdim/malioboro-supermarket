@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  cached_network_image: ^2.3.2+1
   cupertino_icons: ^1.0.0
   email_validator: ^1.0.5
   firebase_auth: ^0.15.4
