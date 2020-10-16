@@ -19,7 +19,12 @@ class Data {
   int counter;
   int subtotal;
 
-  Data({this.nama, this.deskripsi, this.harga, this.gambar});
+  Data({
+    this.nama,
+    this.deskripsi,
+    this.harga,
+    this.gambar,
+  });
 }
 
 List data;
